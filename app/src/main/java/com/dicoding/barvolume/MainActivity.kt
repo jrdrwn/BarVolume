@@ -2,42 +2,30 @@ package com.dicoding.barvolume
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.dicoding.barvolume.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
-    private lateinit var editWidth: EditText
-    private lateinit var editHeight: EditText
-    private lateinit var editLength: EditText
-    private lateinit var btnCalculate: Button
-    private lateinit var tvResult: TextView
-
     companion object {
         private const val STATE_RESULT = "state_result"
     }
 
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        editWidth = findViewById(R.id.edit_width)
-        editHeight = findViewById(R.id.edit_height)
-        editLength = findViewById(R.id.edit_length)
-        btnCalculate = findViewById(R.id.btn_calculate)
-        tvResult = findViewById(R.id.tv_result)
-
-        btnCalculate.setOnClickListener(this)
+        binding.btnCalculate.setOnClickListener(this)
 
         if (savedInstanceState != null) {
             val result = savedInstanceState.getString(STATE_RESULT)
-            tvResult.text = result
+            binding.tvResult.text = result
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -50,31 +38,31 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
-        outState.putString(STATE_RESULT, tvResult.text.toString())
+        outState.putString(STATE_RESULT, binding.tvResult.text.toString())
     }
 
     override fun onClick(v: View?) {
         if (v?.id == R.id.btn_calculate) {
-            val inputLength = editLength.text.toString().trim()
-            val inputWidth = editWidth.text.toString().trim()
-            val inputHeight = editHeight.text.toString().trim()
+            val inputLength = binding.editLength.text.toString().trim()
+            val inputWidth = binding.editWidth.text.toString().trim()
+            val inputHeight = binding.editHeight.text.toString().trim()
             var isEmptyFields = false
             if (inputLength.isEmpty()) {
                 isEmptyFields = true
-                editLength.error = "Field ini tidak boleh kosong"
+                binding.editLength.error = "Field ini tidak boleh kosong"
             }
             if (inputWidth.isEmpty()) {
                 isEmptyFields = true
-                editWidth.error = "Field ini tidak boleh kosong"
+                binding.editWidth.error = "Field ini tidak boleh kosong"
             }
             if (inputHeight.isEmpty()) {
                 isEmptyFields = true
-                editHeight.error = "Field ini tidak boleh kosong"
+                binding.editHeight.error = "Field ini tidak boleh kosong"
             }
 
             if (!isEmptyFields) {
                 val volume = inputLength.toDouble() * inputWidth.toDouble() * inputHeight.toDouble()
-                tvResult.text = volume.toString()
+                binding.tvResult.text = volume.toString()
             }
         }
     }
